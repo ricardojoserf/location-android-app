@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Salvavidapp</string>
+    <string name="message">Message</string>
+    <string name="destination">Destination</string>
+    <string name="whatsapp">Whatsapp</string>
+    <string name="telegram">Telegram</string>
+    <string name="sms">SMS</string>
+    <string name="send">Send</string>
+    <string name="contact_name">Contact name</string>
+    <string name="or_phone_number">or Phone Number</string>
+    <string name="e_mail">E-mail</string>
+</resources>
