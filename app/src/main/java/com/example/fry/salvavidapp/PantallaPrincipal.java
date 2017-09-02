@@ -22,6 +22,9 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Timer;
@@ -52,7 +55,6 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             @Override
             public void onTextChanged(CharSequence s, int start,int before, int count) {
                 if(s.length() != 0){
-                    System.out.println(text_name_contact.getText());
                     for(int i=0; i<contacts_info.size();i++){
                         if(text_name_contact.getText().toString().equals(contacts_names.get(i))) {
                             text_phone_contact.setText(contacts_info.get(contacts_names.get(i)));
@@ -114,30 +116,36 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             Toast.makeText(this, "No permissions", Toast.LENGTH_LONG).show();
             return;
         }
+
         // Get location
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
         // Get lat and long, get value of edit texts and send
         if (mLastLocation != null) {
             String lat = String.valueOf(mLastLocation.getLatitude());
             String lon = String.valueOf(mLastLocation.getLongitude());
-            String location = "http://maps.google.com?q=" + lat + "," + lon;
+            // String location = "http://maps.google.com?q=" + lat + "," + lon;
+            String location = lat + "," + lon;
             EditText messageBox = (EditText)findViewById(R.id.editText2);
             String message = messageBox.getText().toString();
             EditText destinationBox = (EditText)findViewById(R.id.editText);
             String destination = destinationBox.getText().toString();
-            String final_message = message + "\nMy location: "+location;
+            String final_message = message + "\nMy location: "+String.valueOf(location);
+
             // SMS
             CheckBox check_sms = (CheckBox) findViewById(R.id.checkBox);
             if (check_sms.isChecked()){
                 check_sms.setChecked(false);
                 sendSMSMessage(destination, final_message);
             }
+
             /*
             // E-mail
             CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
             if (check_email.isChecked()){
                 sendEmailMessage(destination, final_message);
             }*/
+
         }
     }
 
@@ -155,7 +163,6 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         {
             String name=phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            System.out.println("Nombre: "+name+" Numero:"+phoneNumber);
             if (! contacts_info.containsKey(name)) {
                 contacts_info.put(name, phoneNumber);
                 contacts_names.add(name);
