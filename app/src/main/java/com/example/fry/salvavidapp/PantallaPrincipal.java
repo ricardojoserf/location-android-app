@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -23,10 +24,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.mail.MessagingException;
+import android.net.Uri;
 
 
 public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
@@ -41,7 +44,8 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_principal);
-        String[] permissions = {Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] permissions = {Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.INTERNET};
         checkPermissions(permissions, CODE_PERMISSIONS_1);
         getContacts();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, contacts_names);
@@ -158,9 +162,12 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             String location = lat + "," + lon;
             EditText messageBox = (EditText)findViewById(R.id.editText2);
             String message = messageBox.getText().toString();
+            String final_message = message + "\nMy location: "+String.valueOf(location);
             EditText destinationBox = (EditText)findViewById(R.id.editText);
             String destination = destinationBox.getText().toString();
-            String final_message = message + "\nMy location: "+String.valueOf(location);
+            EditText emailBox = (EditText)findViewById(R.id.editText4);
+            String email = emailBox.getText().toString();
+
             // SMS
             CheckBox check_sms = (CheckBox) findViewById(R.id.checkBox);
             if (check_sms.isChecked()){
@@ -171,7 +178,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
             if (check_email.isChecked()){
                 try {
-                    sendEmailMessage(destination, final_message);
+                    sendEmailMessage(email, final_message);
                 } catch (MessagingException e) {
                     e.printStackTrace();
                 }
@@ -219,42 +226,12 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         Send e-mail
      */
     public void sendEmailMessage(String destination, String message) throws MessagingException {
-        /*
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + "fry93fry@gmail.com"));
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Salvavidapp "+String.valueOf(Calendar.getInstance().getTime()));
-        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
-        startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-        finish();
-        */
-        /*
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         try {
-            new SendMailTask(this).execute("fry93fry@gmail.com", "veintiuno.21,22,25", "fry93fry@gmail.com", "fry93fry@gmail.com", "fry93fry@gmail.com");
+            new SendMailTask(this).execute("salvavidapp.mail", "qweqweqwe", Arrays.asList(destination), "Salvavidapp Message", message);
         }catch(Exception e){}
-        try{
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "No permission for internet", Toast.LENGTH_LONG).show();
-                return;
-            }
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        GMailSender sender = new GMailSender("fry93fry@gmail.com",
-                                "veintiuno.21,22,25");
-                        sender.sendMail("Hello from JavaMail", "Body from JavaMail",
-                                "fry93fry@gmail.com", "fry93fry@gmail.com");
-                    } catch (Exception e) {
-                        Log.e("SendMail", e.getMessage(), e);
-                    }
-                }
-            }).start();
-        }catch(Exception e){}
-        try {
-            new SendMailTask(this).execute("fry93fry", "veintiuno.21,22,25",
-                    Arrays.asList("fry93fry"),
-                "fry93fry@gmail.com", "fry93fry@gmail.com");
-        }catch(Exception e){}
-        */
     }
 
 
