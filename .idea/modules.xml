@@ -3,7 +3,12 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Salvavidapp.iml" filepath="$PROJECT_DIR$/Salvavidapp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/activation/activation.iml" filepath="$PROJECT_DIR$/activation/activation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/additionnal/additionnal.iml" filepath="$PROJECT_DIR$/additionnal/additionnal.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/javax.mail/javax.mail.iml" filepath="$PROJECT_DIR$/javax.mail/javax.mail.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mail/mail.iml" filepath="$PROJECT_DIR$/mail/mail.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mail-1.4.7/mail-1.4.7.iml" filepath="$PROJECT_DIR$/mail-1.4.7/mail-1.4.7.iml" />
     </modules>
   </component>
 </project>
