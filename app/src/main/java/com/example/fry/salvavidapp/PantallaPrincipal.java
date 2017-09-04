@@ -158,8 +158,8 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         if (mLastLocation != null) {
             String lat = String.valueOf(mLastLocation.getLatitude());
             String lon = String.valueOf(mLastLocation.getLongitude());
-            // String location = "http://maps.google.com?q=" + lat + "," + lon;
-            String location = lat + "," + lon;
+            String location = "http://maps.google.com?q=" + lat + "," + lon;
+            //String location = lat + "," + lon;
             EditText messageBox = (EditText)findViewById(R.id.editText2);
             String message = messageBox.getText().toString();
             String final_message = message + "\nMy location: "+String.valueOf(location);
