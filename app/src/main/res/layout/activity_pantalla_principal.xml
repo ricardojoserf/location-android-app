@@ -28,9 +28,9 @@
         android:layout_width="0dp"
         android:layout_height="47dp"
         android:ems="10"
-        android:lines="4"
+        android:lines="1"
         android:inputType="textMultiLine"
-        android:text=""
+        android:hint="Message to send"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
@@ -62,8 +62,8 @@
         android:layout_marginBottom="148dp"
         app:layout_constraintLeft_toLeftOf="@+id/editText3"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="108dp"
-        app:layout_constraintVertical_bias="1.0" />
+        android:layout_marginLeft="3dp"
+        app:layout_constraintVertical_bias="0.38" />
 
     <EditText
         android:id="@+id/editText"
@@ -85,7 +85,9 @@
         android:layout_marginEnd="47dp"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginLeft="47dp"
-        android:layout_marginRight="47dp" />
+        android:layout_marginRight="47dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintVertical_bias="0.48" />
 
 
 
@@ -99,7 +101,7 @@
         tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/button"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="54dp"
         app:layout_constraintLeft_toLeftOf="@+id/editText4"
         android:layout_marginLeft="2dp" />
 
@@ -135,8 +137,8 @@
 
     <AutoCompleteTextView
         android:id="@+id/editText3"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="290dp"
+        android:layout_height="44dp"
         android:ems="10"
         android:hint="@string/contact_name"
         android:inputType="textPersonName"
@@ -156,7 +158,8 @@
         android:layout_marginLeft="46dp"
         android:layout_marginRight="46dp"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteY="199dp" />
 
     <EditText
         android:id="@+id/editText4"
@@ -178,6 +181,8 @@
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="46dp"
         android:layout_marginLeft="47dp"
-        android:layout_marginRight="47dp" />
+        android:layout_marginRight="47dp"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintVertical_bias="1.0" />
 
 </android.support.constraint.ConstraintLayout>
