@@ -1,5 +1,6 @@
 package com.example.fry.salvavidapp;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.database.Cursor;
 import android.provider.ContactsContract;
@@ -39,30 +40,6 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     private final int CODE_PERMISSIONS_1 = 1;
 
 
-    public ArrayList<String> getValues(Bundle b){
-        String id_ = "0";
-        String name = "0";
-        String msg = "0";
-        String sms = "0";
-        String email = "0";
-        id_ = b.getString("id");
-        name = b.getString("name");
-        msg = b.getString("message");
-        sms = b.getString("sms");
-        email = b.getString("email");
-        /*Toast.makeText(getApplicationContext(), "value: "  + id_     , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value2: "  + name     , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value3: "  + msg     , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value4: "  + sms     , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value5: "  + email     , Toast.LENGTH_LONG).show();*/
-        ArrayList<String> values = new ArrayList<String>();
-        values.add(0,name);
-        values.add(1,msg);
-        values.add(2,sms);
-        values.add(3,email);
-        return values;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,14 +57,23 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         final CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
         Button button_send = (Button) findViewById(R.id.button);
         Button button_store = (Button) findViewById(R.id.button2);
+        Button button_back = (Button) findViewById(R.id.button3);
         // Complete values if there are extras
         Bundle b = getIntent().getExtras();
         if(b != null){
             ArrayList<String> values = getValues(b);
             text_alarm_name.setText(values.get(0));
             text_message.setText(values.get(1));
+            check_sms.setChecked(false);
+            check_email.setChecked(false);
             text_phone_contact.setText(values.get(2));
+            if(!values.get(2).equals("")){
+                check_sms.setChecked(true);
+            }
             text_email.setText(values.get(3));
+            if(!values.get(3).equals("")){
+                check_email.setChecked(true);
+            }
         }
         // Autocomplete textbox
         text_name_contact.setAdapter(adapter);
@@ -125,13 +111,13 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                 EjemploDB db = new EjemploDB( getApplicationContext() );
                 if(check_sms.isChecked() && !check_email.isChecked()){
                     if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) ) {
-                        db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "null");
+                        db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "");
                         Toast.makeText(getApplicationContext(), "Added element.", Toast.LENGTH_LONG).show();
                     }
                 }
                 if(!check_sms.isChecked() && check_email.isChecked()){
                     if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
-                        db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "null", text_email.getText().toString());
+                        db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "", text_email.getText().toString());
                         Toast.makeText(getApplicationContext(), "Added element.", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -141,9 +127,44 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                         Toast.makeText(getApplicationContext(), "Added element.", Toast.LENGTH_LONG).show();
                     }
                 }
-                // System.out.println(db.getall());
             }
         });
+        // Button BACK
+        button_back.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(myIntent);
+                finish();
+            }
+        });
+    }
+
+
+    /*
+        Get values if alarm created
+     */
+    public ArrayList<String> getValues(Bundle b){
+        String id_;
+        String name;
+        String msg;
+        String sms;
+        String email;
+        id_ = b.getString("id");
+        name = b.getString("name");
+        msg = b.getString("message");
+        sms = b.getString("sms");
+        email = b.getString("email");
+        /*Toast.makeText(getApplicationContext(), "value: "  + id_     , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value2: "  + name     , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value3: "  + msg     , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value4: "  + sms     , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value5: "  + email     , Toast.LENGTH_LONG).show();*/
+        ArrayList<String> values = new ArrayList<String>();
+        values.add(0,name);
+        values.add(1,msg);
+        values.add(2,sms);
+        values.add(3,email);
+        return values;
     }
 
 
@@ -160,7 +181,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
 
 
     /*
-        Funcitonality after granting permission(s)
+        Functionality after granting permission(s)
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -223,19 +244,16 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             EditText text_phone_contact = (EditText) findViewById(R.id.editText);
             EditText text_message = (EditText) findViewById(R.id.editText2);
             EditText text_email = (EditText) findViewById(R.id.editText4);
-
             String lat = String.valueOf(mLastLocation.getLatitude());
             String lon = String.valueOf(mLastLocation.getLongitude());
             String location = "http://maps.google.com?q=" + lat + "," + lon;
             String final_message = text_message.getText().toString() + "\nMy location: "+String.valueOf(location);
-
             // SMS
             CheckBox check_sms = (CheckBox) findViewById(R.id.checkBox);
             if (check_sms.isChecked() && (!TextUtils.isEmpty(text_phone_contact.getText()))){
                 check_sms.setChecked(false);
                 sendSMSMessage(text_phone_contact.getText().toString(), final_message);
             }
-
             // E-mail
             CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
             if (check_email.isChecked() && (!TextUtils.isEmpty(text_email.getText()))){

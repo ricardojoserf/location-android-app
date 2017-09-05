@@ -88,6 +88,9 @@ public class EjemploDB extends SQLiteOpenHelper {
     }
 
 
+    /*
+        Delete element from DB
+     */
     public boolean eliminar(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         try{
@@ -96,7 +99,6 @@ public class EjemploDB extends SQLiteOpenHelper {
                     new String[] { String.valueOf (id ) });
             db.close();
             return true;
-
         }catch(Exception ex){
             return false;
         }

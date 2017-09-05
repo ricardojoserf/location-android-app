@@ -15,4 +15,8 @@
     <string name="name">Name</string>
     <string name="store">Store</string>
     <string name="enter_an_e_mail">Enter an e-mail</string>
+    <string name="crear">Crear</string>
+    <string name="borrar">Borrar</string>
+    <string name="back">Back</string>
+    <string name="save">Save</string>
 </resources>
