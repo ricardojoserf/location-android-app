@@ -39,6 +39,30 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     private final int CODE_PERMISSIONS_1 = 1;
 
 
+    public ArrayList<String> getValues(Bundle b){
+        String id_ = "0";
+        String name = "0";
+        String msg = "0";
+        String sms = "0";
+        String email = "0";
+        id_ = b.getString("id");
+        name = b.getString("name");
+        msg = b.getString("message");
+        sms = b.getString("sms");
+        email = b.getString("email");
+        /*Toast.makeText(getApplicationContext(), "value: "  + id_     , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value2: "  + name     , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value3: "  + msg     , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value4: "  + sms     , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value5: "  + email     , Toast.LENGTH_LONG).show();*/
+        ArrayList<String> values = new ArrayList<String>();
+        values.add(0,name);
+        values.add(1,msg);
+        values.add(2,sms);
+        values.add(3,email);
+        return values;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +80,15 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         final CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
         Button button_send = (Button) findViewById(R.id.button);
         Button button_store = (Button) findViewById(R.id.button2);
+        // Complete values if there are extras
+        Bundle b = getIntent().getExtras();
+        if(b != null){
+            ArrayList<String> values = getValues(b);
+            text_alarm_name.setText(values.get(0));
+            text_message.setText(values.get(1));
+            text_phone_contact.setText(values.get(2));
+            text_email.setText(values.get(3));
+        }
         // Autocomplete textbox
         text_name_contact.setAdapter(adapter);
         text_name_contact .addTextChangedListener(new TextWatcher() {

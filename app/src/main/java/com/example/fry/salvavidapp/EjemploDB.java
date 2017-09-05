@@ -86,4 +86,19 @@ public class EjemploDB extends SQLiteOpenHelper {
         db.close();
         return a_l_l;
     }
+
+
+    public boolean eliminar(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try{
+            db.delete(TABLA_NOMBRES,
+                    " _id = ?",
+                    new String[] { String.valueOf (id ) });
+            db.close();
+            return true;
+
+        }catch(Exception ex){
+            return false;
+        }
+    }
 }
