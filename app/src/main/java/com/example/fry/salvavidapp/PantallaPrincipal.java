@@ -11,8 +11,8 @@ import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -29,7 +29,6 @@ import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.mail.MessagingException;
-import android.net.Uri;
 
 
 public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
@@ -44,14 +43,21 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_principal);
-        String[] permissions = {Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.INTERNET};
+        String[] permissions = {Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET};
         checkPermissions(permissions, CODE_PERMISSIONS_1);
         getContacts();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, contacts_names);
         final AutoCompleteTextView text_name_contact = (AutoCompleteTextView) findViewById(R.id.editText3);
-        text_name_contact.setAdapter(adapter);
         final EditText text_phone_contact = (EditText) findViewById(R.id.editText);
+        final EditText text_message = (EditText) findViewById(R.id.editText2);
+        final EditText text_email = (EditText) findViewById(R.id.editText4);
+        final EditText text_alarm_name = (EditText) findViewById(R.id.editText5);
+        final CheckBox check_sms = (CheckBox) findViewById(R.id.checkBox);
+        final CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
+        Button button_send = (Button) findViewById(R.id.button);
+        Button button_store = (Button) findViewById(R.id.button2);
+        // Autocomplete textbox
+        text_name_contact.setAdapter(adapter);
         text_name_contact .addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {}
@@ -68,16 +74,38 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                 }
             }
         });
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        // Button SEND
+        button_send.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (mGoogleApiClient != null) {
                     //timerCoord();
-                    showCoord();
+                    send();
                 }
                 else{
                     createGoogleApiClient();
                 }
+            }
+        });
+        // Button STORE
+        button_store.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                EjemploDB db = new EjemploDB( getApplicationContext() );
+                if(check_sms.isChecked() && !check_email.isChecked()){
+                    if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) ) {
+                        db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "null");
+                    }
+                }
+                if(!check_sms.isChecked() && check_email.isChecked()){
+                    if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
+                        db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "null", text_email.getText().toString());
+                    }
+                }
+                if(check_sms.isChecked() && check_email.isChecked()){
+                    if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
+                        db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), text_email.getText().toString());
+                    }
+                }
+                // System.out.println(db.getall());
             }
         });
     }
@@ -137,7 +165,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         TimerTask t = new TimerTask() {
             @Override
             public void run(){
-                showCoord();
+                send();
             }
         };
         timer.scheduleAtFixedRate(t,0,10000);
@@ -147,7 +175,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     /*
         Show coord. Send it in the future
      */
-    public void showCoord(){
+    public void send(){
         // Check permission
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -156,29 +184,29 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         // Get lat and long, get value of edit texts and send
         if (mLastLocation != null) {
+            EditText text_phone_contact = (EditText) findViewById(R.id.editText);
+            EditText text_message = (EditText) findViewById(R.id.editText2);
+            EditText text_email = (EditText) findViewById(R.id.editText4);
+
             String lat = String.valueOf(mLastLocation.getLatitude());
             String lon = String.valueOf(mLastLocation.getLongitude());
             String location = "http://maps.google.com?q=" + lat + "," + lon;
-            //String location = lat + "," + lon;
-            EditText messageBox = (EditText)findViewById(R.id.editText2);
-            String message = messageBox.getText().toString();
-            String final_message = message + "\nMy location: "+String.valueOf(location);
-            EditText destinationBox = (EditText)findViewById(R.id.editText);
-            String destination = destinationBox.getText().toString();
-            EditText emailBox = (EditText)findViewById(R.id.editText4);
-            String email = emailBox.getText().toString();
+            String final_message = text_message.getText().toString() + "\nMy location: "+String.valueOf(location);
 
             // SMS
             CheckBox check_sms = (CheckBox) findViewById(R.id.checkBox);
+            // if (check_sms.isChecked() && (!TextUtils.isEmpty(text_phone_contact.getText()))){
             if (check_sms.isChecked()){
                 check_sms.setChecked(false);
-                sendSMSMessage(destination, final_message);
+                sendSMSMessage(text_phone_contact.getText().toString(), final_message);
             }
+
             // E-mail
             CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
+            // if (check_email.isChecked() && (!TextUtils.isEmpty(text_email.getText()))){
             if (check_email.isChecked()){
                 try {
-                    sendEmailMessage(email, final_message);
+                    sendEmailMessage(text_email.getText().toString(), final_message);
                 } catch (MessagingException e) {
                     e.printStackTrace();
                 }
@@ -231,14 +259,17 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         }
         try {
             new SendMailTask(this).execute("salvavidapp.mail", "qweqweqwe", Arrays.asList(destination), "Salvavidapp Message", message);
-        }catch(Exception e){}
+            Toast.makeText(getApplicationContext(), "Email sent.", Toast.LENGTH_LONG).show();
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(), "Email not sent.", Toast.LENGTH_LONG).show();
+        }
     }
 
 
     @Override
     public void onConnected(Bundle connectionHint) {
         //timerCoord();
-        showCoord();
+        send();
     }
 
 

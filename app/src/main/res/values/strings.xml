@@ -11,4 +11,8 @@
     <string name="e_mail">E-mail</string>
     <string name="to">fry93fry@gmail.com</string>
     <string name="enter_a_e_mail">Enter a e-mail</string>
+    <string name="alarm_name">Alarm name</string>
+    <string name="name">Name</string>
+    <string name="store">Store</string>
+    <string name="enter_an_e_mail">Enter an e-mail</string>
 </resources>
