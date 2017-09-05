@@ -93,16 +93,19 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                 if(check_sms.isChecked() && !check_email.isChecked()){
                     if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) ) {
                         db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "null");
+                        Toast.makeText(getApplicationContext(), "Added element.", Toast.LENGTH_LONG).show();
                     }
                 }
                 if(!check_sms.isChecked() && check_email.isChecked()){
                     if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
                         db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "null", text_email.getText().toString());
+                        Toast.makeText(getApplicationContext(), "Added element.", Toast.LENGTH_LONG).show();
                     }
                 }
                 if(check_sms.isChecked() && check_email.isChecked()){
                     if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
                         db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), text_email.getText().toString());
+                        Toast.makeText(getApplicationContext(), "Added element.", Toast.LENGTH_LONG).show();
                     }
                 }
                 // System.out.println(db.getall());
@@ -195,16 +198,14 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
 
             // SMS
             CheckBox check_sms = (CheckBox) findViewById(R.id.checkBox);
-            // if (check_sms.isChecked() && (!TextUtils.isEmpty(text_phone_contact.getText()))){
-            if (check_sms.isChecked()){
+            if (check_sms.isChecked() && (!TextUtils.isEmpty(text_phone_contact.getText()))){
                 check_sms.setChecked(false);
                 sendSMSMessage(text_phone_contact.getText().toString(), final_message);
             }
 
             // E-mail
             CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
-            // if (check_email.isChecked() && (!TextUtils.isEmpty(text_email.getText()))){
-            if (check_email.isChecked()){
+            if (check_email.isChecked() && (!TextUtils.isEmpty(text_email.getText()))){
                 try {
                     sendEmailMessage(text_email.getText().toString(), final_message);
                 } catch (MessagingException e) {
