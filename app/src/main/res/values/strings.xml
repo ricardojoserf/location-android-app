@@ -19,4 +19,6 @@
     <string name="borrar">Borrar</string>
     <string name="back">Back</string>
     <string name="save">Save</string>
+    <string name="test_now">Test now</string>
+    <string name="test">Test</string>
 </resources>
