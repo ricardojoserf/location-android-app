@@ -1,27 +1,24 @@
 package com.example.fry.salvavidapp;
 
+import android.support.annotation.RequiresApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.example.fry.salvavidapp.R.id.listalarms;
-
-/**
- * Created by Fry on 05-Sep-17.
- */
 
 public class MainActivity extends Activity {
 
@@ -31,7 +28,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lista);
-        final ListView listview = (ListView) findViewById(R.id.listalarms);
+        final ListView listview = findViewById(R.id.listalarms);
         EjemploDB db = new EjemploDB( getApplicationContext() );
         final ArrayList<ArrayList<String>> list_lists = db.getall();
         final ArrayList<String> list_names = new ArrayList<>();
@@ -46,7 +43,7 @@ public class MainActivity extends Activity {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-                if (flag_delete == true){
+                if (flag_delete){
                     try{
                         view.animate().setDuration(1000).alpha(0).withEndAction(new Runnable() {
                             @Override
@@ -67,7 +64,7 @@ public class MainActivity extends Activity {
                             }
                         });
                     }catch(Exception e){
-                        return;
+                        e.printStackTrace();
                     }
                 }
                 else{
@@ -76,7 +73,7 @@ public class MainActivity extends Activity {
             }
         });
         // Button CREATE
-        Button button_create = (Button) findViewById(R.id.button);
+        Button button_create = findViewById(R.id.button);
         button_create.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent myIntent = new Intent(getApplicationContext(), PantallaPrincipal.class);
@@ -85,7 +82,7 @@ public class MainActivity extends Activity {
             }
         });
         // Button DELETE
-        Button button_delete = (Button) findViewById(R.id.button2);
+        Button button_delete = findViewById(R.id.button2);
         button_delete.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 flag_delete = (!flag_delete);
@@ -113,9 +110,6 @@ public class MainActivity extends Activity {
                 b.putString("sms", String.valueOf(list_lists.get(j).get(3)));
                 b.putString("email", String.valueOf(list_lists.get(j).get(4)));
                 b.putString("contacto", String.valueOf(list_lists.get(j).get(5)));
-
-                // System.out.println(b);
-
                 myIntent.putExtras(b);
                 startActivity(myIntent);
                 finish();
@@ -124,12 +118,13 @@ public class MainActivity extends Activity {
         }
     }
 
+
     /*
         Adapter for list view
      */
     private class StableArrayAdapter extends ArrayAdapter<String> {
-        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
-        public StableArrayAdapter(Context context, int textViewResourceId,List<String> objects) {
+        HashMap<String, Integer> mIdMap = new HashMap<>();
+        private StableArrayAdapter(Context context, int textViewResourceId,List<String> objects) {
             super(context, textViewResourceId, objects);
             for (int i = 0; i < objects.size(); ++i) {
                 mIdMap.put(objects.get(i), i);
@@ -144,6 +139,15 @@ public class MainActivity extends Activity {
         public boolean hasStableIds() {
             return true;
         }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent){
+            View view = super.getView(position, convertView, parent);
+            TextView tv = view.findViewById(android.R.id.text1);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
+            return view;
+        }
     }
+
 
 }

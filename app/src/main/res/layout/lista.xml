@@ -11,48 +11,98 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="59dp"
+        android:layout_width="62dp"
         android:layout_height="51dp"
         android:layout_weight="1"
         android:background="@mipmap/addbutton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="2dp"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteY="514dp"
-        tools:layout_editor_absoluteX="325dp"
-        android:layout_marginRight="0dp" />
+        android:layout_marginBottom="3dp"
+        android:layout_marginRight="0dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="59dp"
-        android:layout_height="51dp"
+        android:layout_width="64dp"
+        android:layout_height="52dp"
         android:background="@mipmap/deletebutton"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="1dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/button"
-        tools:layout_editor_absoluteY="515dp" />
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="0dp"
+        app:layout_constraintVertical_bias="1.0"
+        tools:layout_editor_absoluteY="513dp" />
+
+    <!--
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="410dp"
+        android:layout_height="53dp"
+        app:srcCompat="@color/colorPrimary" />-->
 
     <ListView
         android:id="@+id/listalarms"
-        android:layout_width="355dp"
-        android:layout_height="428dp"
+        android:layout_width="359dp"
+        android:layout_height="402dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        android:layout_marginStart="14dp"
-        android:layout_marginEnd="14dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="71dp"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
-        tools:layout_editor_absoluteY="75dp">
+        android:layout_marginBottom="71dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        app:layout_constraintVertical_bias="1.0">
 
     </ListView>
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline5"
+        app:layout_constraintGuide_begin="20dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="20dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline6"
+        app:layout_constraintGuide_begin="20dp"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteY="20dp"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline7"
+        app:layout_constraintGuide_begin="20dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="20dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline8"
+        app:layout_constraintGuide_begin="20dp"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteY="20dp"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline9"
+        app:layout_constraintGuide_begin="20dp"
+        android:orientation="vertical" />
 
 </android.support.constraint.ConstraintLayout>

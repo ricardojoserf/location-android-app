@@ -28,7 +28,7 @@
         android:ems="10"
         android:lines="1"
         android:inputType="textMultiLine"
-        android:hint="Message to send"
+        android:hint="@string/message_to_send"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
@@ -154,7 +154,7 @@
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteY="516dp"
         tools:layout_editor_absoluteX="334dp"
-        android:layout_marginRight="0dp" />
+        />
 
     <TextView
         android:id="@+id/textView3"

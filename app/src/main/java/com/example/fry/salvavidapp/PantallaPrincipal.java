@@ -1,7 +1,7 @@
 package com.example.fry.salvavidapp;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.content.Intent;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -27,16 +27,16 @@ import com.google.android.gms.location.LocationServices;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
-import java.util.Timer;
-import java.util.TimerTask;
+//import java.util.Timer;
+//import java.util.TimerTask;
 import javax.mail.MessagingException;
 
 
 public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
     Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
-    Hashtable<String, String> contacts_info = new Hashtable<String, String>();
-    ArrayList<String> contacts_names = new ArrayList<String>();
+    Hashtable<String, String> contacts_info = new Hashtable<>();
+    ArrayList<String> contacts_names = new ArrayList<>();
     private final int CODE_PERMISSIONS_1 = 1;
     private Boolean flag_update = false;
     private int id_global = -1;
@@ -49,7 +49,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         String[] permissions = {Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET};
         checkPermissions(permissions, CODE_PERMISSIONS_1);
         getContacts();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line, contacts_names);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,android.R.layout.simple_dropdown_item_1line, contacts_names);
         final AutoCompleteTextView text_name_contact = (AutoCompleteTextView) findViewById(R.id.editText3);
         final EditText text_phone_contact = (EditText) findViewById(R.id.editText);
         final EditText text_message = (EditText) findViewById(R.id.editText2);
@@ -118,6 +118,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                     db.update_element(id_global, text_alarm_name.getText().toString(), text_message.getText().toString(),
                             text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString());
                     Toast.makeText(getApplicationContext(), "Element updated.", Toast.LENGTH_LONG).show();
+                    back();
                 }
                 else{
                     EjemploDB db = new EjemploDB( getApplicationContext());
@@ -125,18 +126,35 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                         if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) ) {
                             db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "", text_name_contact.getText().toString());
                             Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                            back();
                         }
                     }
-                    if(!check_sms.isChecked() && check_email.isChecked()){
+                    else if(!check_sms.isChecked() && check_email.isChecked()){
                         if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
                             db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "", text_email.getText().toString(), "");
                             Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                            back();
                         }
                     }
-                    if(check_sms.isChecked() && check_email.isChecked()){
+                    else if(check_sms.isChecked() && check_email.isChecked()){
                         if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
                             db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString());
                             Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                            back();
+                        }
+                    }
+                    else{
+                        if((TextUtils.isEmpty(text_alarm_name.getText()))){
+                            Toast.makeText(getApplicationContext(), "Please fill Name.", Toast.LENGTH_LONG).show();
+                        }
+                        else if (!TextUtils.isEmpty(text_phone_contact.getText()) && !check_sms.isChecked() && !TextUtils.isEmpty(text_email.getText()) && !check_email.isChecked()){
+                            Toast.makeText(getApplicationContext(), "Please check SMS and EMAIL.", Toast.LENGTH_LONG).show();
+                        }
+                        else if (!TextUtils.isEmpty(text_phone_contact.getText()) && !check_sms.isChecked()){
+                            Toast.makeText(getApplicationContext(), "Please check SMS.", Toast.LENGTH_LONG).show();
+                        }
+                        else if (!TextUtils.isEmpty(text_email.getText()) && !check_email.isChecked()){
+                            Toast.makeText(getApplicationContext(), "Please check EMAIL.", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -145,11 +163,19 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         // Button BACK
         button_back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(myIntent);
-                finish();
+                back();
             }
         });
+    }
+
+
+    /*
+        Change view
+     */
+    public void back(){
+        Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(myIntent);
+        finish();
     }
 
 
@@ -177,7 +203,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         Toast.makeText(getApplicationContext(), "value5: "  + email     , Toast.LENGTH_LONG).show();
         Toast.makeText(getApplicationContext(), "value6: "  + contacto  , Toast.LENGTH_LONG).show();
         */
-        ArrayList<String> values = new ArrayList<String>();
+        ArrayList<String> values = new ArrayList<>();
         values.add(0,name);
         values.add(1,msg);
         values.add(2,sms);
@@ -194,7 +220,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     public void checkPermissions(String[] permissions, int permission_codes){
         for(int i=0;i<permissions.length;i++) {
             if (ActivityCompat.checkSelfPermission(this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, permissions, CODE_PERMISSIONS_1);
+                ActivityCompat.requestPermissions(this, permissions, permission_codes);
             }
         }
     }
@@ -223,12 +249,12 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     public void createGoogleApiClient() {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) this)
-                    .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
         }
-        if (mGoogleApiClient != null) {
+        else{
             mGoogleApiClient.connect();
         }
     }
@@ -237,6 +263,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     /*
         Timer every 5 seconds
      */
+    /*
     public void timerCoord(){
         Timer timer = new Timer();
         TimerTask t = new TimerTask() {
@@ -247,7 +274,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         };
         timer.scheduleAtFixedRate(t,0,10000);
     }
-
+    */
 
     /*
         Show coord. Send it in the future
