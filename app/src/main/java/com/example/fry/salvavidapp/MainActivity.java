@@ -112,6 +112,10 @@ public class MainActivity extends Activity {
                 b.putString("message", String.valueOf(list_lists.get(j).get(2)));
                 b.putString("sms", String.valueOf(list_lists.get(j).get(3)));
                 b.putString("email", String.valueOf(list_lists.get(j).get(4)));
+                b.putString("contacto", String.valueOf(list_lists.get(j).get(5)));
+
+                // System.out.println(b);
+
                 myIntent.putExtras(b);
                 startActivity(myIntent);
                 finish();

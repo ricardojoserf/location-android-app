@@ -38,6 +38,8 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     Hashtable<String, String> contacts_info = new Hashtable<String, String>();
     ArrayList<String> contacts_names = new ArrayList<String>();
     private final int CODE_PERMISSIONS_1 = 1;
+    private Boolean flag_update = false;
+    private int id_global = -1;
 
 
     @Override
@@ -74,6 +76,9 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             if(!values.get(3).equals("")){
                 check_email.setChecked(true);
             }
+            text_name_contact.setText(values.get(4));
+            // Flag update
+            flag_update = true;
         }
         // Autocomplete textbox
         text_name_contact.setAdapter(adapter);
@@ -108,23 +113,31 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         // Button STORE
         button_store.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                EjemploDB db = new EjemploDB( getApplicationContext() );
-                if(check_sms.isChecked() && !check_email.isChecked()){
-                    if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) ) {
-                        db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "");
-                        Toast.makeText(getApplicationContext(), "Added element.", Toast.LENGTH_LONG).show();
-                    }
+                if(flag_update){
+                    EjemploDB db = new EjemploDB( getApplicationContext());
+                    db.update_element(id_global, text_alarm_name.getText().toString(), text_message.getText().toString(),
+                            text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString());
+                    Toast.makeText(getApplicationContext(), "Element updated.", Toast.LENGTH_LONG).show();
                 }
-                if(!check_sms.isChecked() && check_email.isChecked()){
-                    if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
-                        db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "", text_email.getText().toString());
-                        Toast.makeText(getApplicationContext(), "Added element.", Toast.LENGTH_LONG).show();
+                else{
+                    EjemploDB db = new EjemploDB( getApplicationContext());
+                    if(check_sms.isChecked() && !check_email.isChecked()){
+                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) ) {
+                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "", text_name_contact.getText().toString());
+                            Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                        }
                     }
-                }
-                if(check_sms.isChecked() && check_email.isChecked()){
-                    if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
-                        db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), text_email.getText().toString());
-                        Toast.makeText(getApplicationContext(), "Added element.", Toast.LENGTH_LONG).show();
+                    if(!check_sms.isChecked() && check_email.isChecked()){
+                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
+                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "", text_email.getText().toString(), "");
+                            Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    if(check_sms.isChecked() && check_email.isChecked()){
+                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
+                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString());
+                            Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             }
@@ -149,21 +162,28 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         String msg;
         String sms;
         String email;
+        String contacto;
+        System.out.println(b);
         id_ = b.getString("id");
         name = b.getString("name");
         msg = b.getString("message");
         sms = b.getString("sms");
         email = b.getString("email");
-        /*Toast.makeText(getApplicationContext(), "value: "  + id_     , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value2: "  + name     , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value3: "  + msg     , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value4: "  + sms     , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value5: "  + email     , Toast.LENGTH_LONG).show();*/
+        contacto=b.getString("contacto");
+        /*Toast.makeText(getApplicationContext(), "value: "  + id_      , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value2: "  + name      , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value3: "  + msg       , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value4: "  + sms       , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value5: "  + email     , Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "value6: "  + contacto  , Toast.LENGTH_LONG).show();
+        */
         ArrayList<String> values = new ArrayList<String>();
         values.add(0,name);
         values.add(1,msg);
         values.add(2,sms);
         values.add(3,email);
+        values.add(4,contacto);
+        id_global = Integer.valueOf(id_);
         return values;
     }
 
