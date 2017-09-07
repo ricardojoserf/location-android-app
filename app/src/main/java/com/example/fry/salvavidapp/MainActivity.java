@@ -82,12 +82,18 @@ public class MainActivity extends Activity {
             }
         });
         // Button DELETE
-        Button button_delete = findViewById(R.id.button2);
+        final Button button_delete = findViewById(R.id.button2);
         button_delete.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 flag_delete = (!flag_delete);
-                if(flag_delete){    Toast.makeText(getApplicationContext(), "Press to delete.", Toast.LENGTH_LONG).show(); }
-                else           {    Toast.makeText(getApplicationContext(), "Not deleting anymore.", Toast.LENGTH_LONG).show(); }
+                if(flag_delete){
+                    Toast.makeText(getApplicationContext(), "Press to delete.", Toast.LENGTH_SHORT).show();
+                    button_delete.setBackgroundResource(R.mipmap.delete1);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Not deleting anymore.", Toast.LENGTH_SHORT).show();
+                    button_delete.setBackgroundResource(R.mipmap.delete0);
+                }
             }
         });
     }

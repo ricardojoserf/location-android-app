@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context="com.example.fry.salvavidapp.PantallaPrincipal"
     tools:layout_editor_absoluteY="25dp"
     tools:layout_editor_absoluteX="0dp">
@@ -26,7 +27,7 @@
         android:id="@+id/button2"
         android:layout_width="57dp"
         android:layout_height="53dp"
-        android:background="@mipmap/deletebutton"
+        android:background="@mipmap/delete0"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="2dp"

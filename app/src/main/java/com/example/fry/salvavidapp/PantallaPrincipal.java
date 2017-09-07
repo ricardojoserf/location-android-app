@@ -59,7 +59,6 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         final CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
         Button button_send = (Button) findViewById(R.id.button);
         Button button_store = (Button) findViewById(R.id.button2);
-        Button button_back = (Button) findViewById(R.id.button3);
         // Complete values if there are extras
         Bundle b = getIntent().getExtras();
         if(b != null){
@@ -117,7 +116,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                     EjemploDB db = new EjemploDB( getApplicationContext());
                     db.update_element(id_global, text_alarm_name.getText().toString(), text_message.getText().toString(),
                             text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString());
-                    Toast.makeText(getApplicationContext(), "Element updated.", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(getApplicationContext(), "Element updated.", Toast.LENGTH_LONG).show();
                     back();
                 }
                 else{
@@ -125,21 +124,21 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                     if(check_sms.isChecked() && !check_email.isChecked()){
                         if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) ) {
                             db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "", text_name_contact.getText().toString());
-                            Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                            // Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
                             back();
                         }
                     }
                     else if(!check_sms.isChecked() && check_email.isChecked()){
                         if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
                             db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "", text_email.getText().toString(), "");
-                            Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                            // Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
                             back();
                         }
                     }
                     else if(check_sms.isChecked() && check_email.isChecked()){
                         if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
                             db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString());
-                            Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                            // Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
                             back();
                         }
                     }
@@ -160,12 +159,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                 }
             }
         });
-        // Button BACK
-        button_back.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                back();
-            }
-        });
+
     }
 
 
@@ -178,6 +172,14 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         finish();
     }
 
+    /*
+        Back button of the phone
+
+     */
+    @Override
+    public void onBackPressed() {
+        back();
+    }
 
     /*
         Get values if alarm created
@@ -196,13 +198,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         sms = b.getString("sms");
         email = b.getString("email");
         contacto=b.getString("contacto");
-        /*Toast.makeText(getApplicationContext(), "value: "  + id_      , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value2: "  + name      , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value3: "  + msg       , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value4: "  + sms       , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value5: "  + email     , Toast.LENGTH_LONG).show();
-        Toast.makeText(getApplicationContext(), "value6: "  + contacto  , Toast.LENGTH_LONG).show();
-        */
+
         ArrayList<String> values = new ArrayList<>();
         values.add(0,name);
         values.add(1,msg);
@@ -244,17 +240,17 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
 
 
     /*
-        Creating Google Api Client
-     */
+           Creating Google Api Client
+        */
     public void createGoogleApiClient() {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
+                    .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) this)
+                    .addOnConnectionFailedListener((GoogleApiClient.OnConnectionFailedListener) this)
                     .addApi(LocationServices.API)
                     .build();
         }
-        else{
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
     }
@@ -298,14 +294,15 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             // SMS
             CheckBox check_sms = (CheckBox) findViewById(R.id.checkBox);
             if (check_sms.isChecked() && (!TextUtils.isEmpty(text_phone_contact.getText()))){
-                check_sms.setChecked(false);
                 sendSMSMessage(text_phone_contact.getText().toString(), final_message);
+                check_sms.setChecked(false);
             }
             // E-mail
             CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
             if (check_email.isChecked() && (!TextUtils.isEmpty(text_email.getText()))){
                 try {
                     sendEmailMessage(text_email.getText().toString(), final_message);
+                    check_email.setChecked(false);
                 } catch (MessagingException e) {
                     e.printStackTrace();
                 }
