@@ -26,6 +26,13 @@
         <activity android:name=".PantallaPrincipal" android:label="Pantalla Principal" android:configChanges="orientation"
             android:screenOrientation="portrait"></activity>
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <receiver android:name="WidgetController" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/simple_widget_info" />
+        </receiver>
     </application>
 
 </manifest>
