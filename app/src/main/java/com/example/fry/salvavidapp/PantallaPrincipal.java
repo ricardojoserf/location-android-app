@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TimerTask;
 //import java.util.Timer;
 //import java.util.TimerTask;
 import javax.mail.MessagingException;
@@ -262,7 +263,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     /*
            Creating Google Api Client
         */
-    public void createGoogleApiClient() {
+    public GoogleApiClient createGoogleApiClient() {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) this)
@@ -273,6 +274,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
+        return mGoogleApiClient;
     }
 
 
@@ -297,6 +299,14 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     }
 
 
+    public String get_final_message(String basic_msg, Location mLastLocation){
+        String lat = String.valueOf(this.mLastLocation.getLatitude());
+        String lon = String.valueOf(this.mLastLocation.getLongitude());
+        String location = "http://maps.google.com?q=" + lat + "," + lon;
+        String final_message = basic_msg + "\nMy location: "+String.valueOf(location);
+        return final_message;
+    }
+
     /*
         Show coord. Send it in the future
      */
@@ -312,10 +322,8 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             EditText text_phone_contact = (EditText) findViewById(R.id.editText);
             EditText text_message = (EditText) findViewById(R.id.editText2);
             EditText text_email = (EditText) findViewById(R.id.editText4);
-            String lat = String.valueOf(mLastLocation.getLatitude());
-            String lon = String.valueOf(mLastLocation.getLongitude());
-            String location = "http://maps.google.com?q=" + lat + "," + lon;
-            String final_message = text_message.getText().toString() + "\nMy location: "+String.valueOf(location);
+
+            String final_message = get_final_message(text_message.getText().toString(), mLastLocation);
             // SMS
             CheckBox check_sms = (CheckBox) findViewById(R.id.checkBox);
             if (check_sms.isChecked() && (!TextUtils.isEmpty(text_phone_contact.getText()))){
