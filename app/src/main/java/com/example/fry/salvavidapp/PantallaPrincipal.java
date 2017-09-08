@@ -27,6 +27,8 @@ import com.google.android.gms.location.LocationServices;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
+import java.util.Timer;
+import java.util.TimerTask;
 //import java.util.Timer;
 //import java.util.TimerTask;
 import javax.mail.MessagingException;
@@ -40,6 +42,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     private final int CODE_PERMISSIONS_1 = 1;
     private Boolean flag_update = false;
     private int id_global = -1;
+    private double minutes = 1;
 
 
     @Override
@@ -55,6 +58,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         final EditText text_message = (EditText) findViewById(R.id.editText2);
         final EditText text_email = (EditText) findViewById(R.id.editText4);
         final EditText text_alarm_name = (EditText) findViewById(R.id.editText5);
+        final EditText text_minutes = (EditText) findViewById(R.id.editText8);
         final CheckBox check_sms = (CheckBox) findViewById(R.id.checkBox);
         final CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
         Button button_send = (Button) findViewById(R.id.button);
@@ -76,6 +80,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                 check_email.setChecked(true);
             }
             text_name_contact.setText(values.get(4));
+            text_minutes.setText(values.get(5));
             // Flag update
             flag_update = true;
         }
@@ -100,9 +105,14 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         // Button SEND
         button_send.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                try{
+                    minutes = Double.valueOf(text_minutes.getText().toString());
+                }catch(Exception e){
+                    Toast.makeText(PantallaPrincipal.this, "Timer can not be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (mGoogleApiClient != null) {
-                    //timerCoord();
-                    send();
+                    timerCoord();
                 }
                 else{
                     createGoogleApiClient();
@@ -114,46 +124,59 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             public void onClick(View v) {
                 if(flag_update){
                     EjemploDB db = new EjemploDB( getApplicationContext());
+                    String name_contact = text_name_contact.getText().toString();
+                    String phone_contact = text_phone_contact.getText().toString();
+                    String email = text_email.getText().toString();
+                    if((!check_sms.isChecked()) && ((!phone_contact.equals("")))){
+                        Toast.makeText(getApplicationContext(), "Please check 'SMS' or delete the phone number.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if((!check_email.isChecked()) && (!email.equals("")) ){
+                        Toast.makeText(getApplicationContext(), "Please check 'E-mail' or delete the e-mail.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    if(!check_sms.isChecked()){name_contact=""; phone_contact="";}
+                    if(!check_email.isChecked()){email="";}
                     db.update_element(id_global, text_alarm_name.getText().toString(), text_message.getText().toString(),
-                            text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString());
+                            phone_contact, email, name_contact, text_minutes.getText().toString());
                     // Toast.makeText(getApplicationContext(), "Element updated.", Toast.LENGTH_LONG).show();
                     back();
                 }
                 else{
                     EjemploDB db = new EjemploDB( getApplicationContext());
                     if(check_sms.isChecked() && !check_email.isChecked()){
-                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) ) {
-                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "", text_name_contact.getText().toString());
+                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_minutes.getText())) ) {
+                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "", text_name_contact.getText().toString(), text_minutes.getText().toString());
                             // Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
                             back();
                         }
                     }
                     else if(!check_sms.isChecked() && check_email.isChecked()){
-                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
-                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "", text_email.getText().toString(), "");
+                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText())) && (!TextUtils.isEmpty(text_minutes.getText()))) {
+                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "", text_email.getText().toString(), "", text_minutes.getText().toString());
                             // Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
                             back();
                         }
                     }
                     else if(check_sms.isChecked() && check_email.isChecked()){
-                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
-                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString());
+                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_email.getText())) && (!TextUtils.isEmpty(text_minutes.getText())) ) {
+                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString(), text_minutes.getText().toString());
                             // Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
                             back();
                         }
                     }
                     else{
                         if((TextUtils.isEmpty(text_alarm_name.getText()))){
-                            Toast.makeText(getApplicationContext(), "Please fill Name.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Please fill 'Name'.", Toast.LENGTH_LONG).show();
                         }
                         else if (!TextUtils.isEmpty(text_phone_contact.getText()) && !check_sms.isChecked() && !TextUtils.isEmpty(text_email.getText()) && !check_email.isChecked()){
-                            Toast.makeText(getApplicationContext(), "Please check SMS and EMAIL.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Please check 'SMS' and 'E-mail'.", Toast.LENGTH_LONG).show();
                         }
                         else if (!TextUtils.isEmpty(text_phone_contact.getText()) && !check_sms.isChecked()){
-                            Toast.makeText(getApplicationContext(), "Please check SMS.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Please check 'SMS'.", Toast.LENGTH_LONG).show();
                         }
                         else if (!TextUtils.isEmpty(text_email.getText()) && !check_email.isChecked()){
-                            Toast.makeText(getApplicationContext(), "Please check EMAIL.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Please check 'E-mail'.", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
@@ -172,6 +195,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         finish();
     }
 
+
     /*
         Back button of the phone
 
@@ -181,30 +205,26 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         back();
     }
 
+
     /*
         Get values if alarm created
      */
     public ArrayList<String> getValues(Bundle b){
-        String id_;
-        String name;
-        String msg;
-        String sms;
-        String email;
-        String contacto;
-        System.out.println(b);
+        String id_, name, msg, sms, email, contacto, timer;
         id_ = b.getString("id");
         name = b.getString("name");
         msg = b.getString("message");
         sms = b.getString("sms");
         email = b.getString("email");
         contacto=b.getString("contacto");
-
+        timer=b.getString("timer");
         ArrayList<String> values = new ArrayList<>();
         values.add(0,name);
         values.add(1,msg);
         values.add(2,sms);
         values.add(3,email);
         values.add(4,contacto);
+        values.add(5,timer);
         id_global = Integer.valueOf(id_);
         return values;
     }
@@ -259,18 +279,23 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
     /*
         Timer every 5 seconds
      */
-    /*
     public void timerCoord(){
         Timer timer = new Timer();
         TimerTask t = new TimerTask() {
             @Override
             public void run(){
-                send();
+                PantallaPrincipal.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        send();
+                    }
+                });
             }
         };
-        timer.scheduleAtFixedRate(t,0,10000);
+        int ms = (int) ((int) 60*1000*minutes);
+        timer.scheduleAtFixedRate(t,0,ms);
     }
-    */
+
 
     /*
         Show coord. Send it in the future
@@ -295,14 +320,14 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             CheckBox check_sms = (CheckBox) findViewById(R.id.checkBox);
             if (check_sms.isChecked() && (!TextUtils.isEmpty(text_phone_contact.getText()))){
                 sendSMSMessage(text_phone_contact.getText().toString(), final_message);
-                check_sms.setChecked(false);
+                /// check_sms.setChecked(false);
             }
             // E-mail
             CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
             if (check_email.isChecked() && (!TextUtils.isEmpty(text_email.getText()))){
                 try {
                     sendEmailMessage(text_email.getText().toString(), final_message);
-                    check_email.setChecked(false);
+                    /// check_email.setChecked(false);
                 } catch (MessagingException e) {
                     e.printStackTrace();
                 }
@@ -341,8 +366,12 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             return;
         }
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(destination, null, message, null, null);
-        Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+        try {
+            smsManager.sendTextMessage(destination, null, message, null, null);
+            Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+        }catch(Exception e){
+            Toast.makeText(getApplicationContext(), "SMS not sent.", Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -364,8 +393,8 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        //timerCoord();
-        send();
+        timerCoord();
+        //send();
     }
 
 

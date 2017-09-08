@@ -22,7 +22,7 @@ import java.util.List;
 
 public class MainActivity extends Activity {
 
-        Boolean flag_delete = false;
+    Boolean flag_delete = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +116,7 @@ public class MainActivity extends Activity {
                 b.putString("sms", String.valueOf(list_lists.get(j).get(3)));
                 b.putString("email", String.valueOf(list_lists.get(j).get(4)));
                 b.putString("contacto", String.valueOf(list_lists.get(j).get(5)));
+                b.putString("timer", String.valueOf(list_lists.get(j).get(6)));
                 myIntent.putExtras(b);
                 startActivity(myIntent);
                 finish();
@@ -136,11 +137,13 @@ public class MainActivity extends Activity {
                 mIdMap.put(objects.get(i), i);
             }
         }
+
         @Override
         public long getItemId(int position) {
             String item = getItem(position);
             return mIdMap.get(item);
         }
+
         @Override
         public boolean hasStableIds() {
             return true;

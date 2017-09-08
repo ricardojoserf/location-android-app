@@ -19,11 +19,13 @@ public class EjemploDB extends SQLiteOpenHelper {
     public static final String COLUMNA_SMS= "sms";
     public static final String COLUMNA_EMAIL = "email";
     public static final String COLUMNA_CONTACTO = "contacto";
+    public static final String COLUMNA_TIMER = "timer";
+
 
     private static final String SQL_CREAR = "create table " + TABLA_NOMBRES + "("
             + COLUMNA_ID + " integer primary key autoincrement, " + COLUMNA_NOMBRE + " text, " + COLUMNA_MENSAJE + " text, " + COLUMNA_SMS + " text, "
-            + COLUMNA_CONTACTO  + " text, "
-            + COLUMNA_EMAIL + " text);";
+            + COLUMNA_CONTACTO  + " text, "+  COLUMNA_EMAIL + " text, "
+            +  COLUMNA_TIMER + " text);";
 
     public EjemploDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -36,7 +38,7 @@ public class EjemploDB extends SQLiteOpenHelper {
     /*
         Add element to DB
      */
-    public int add_element(String nombre, String mensaje, String phone, String email, String contacto){
+    public int add_element(String nombre, String mensaje, String phone, String email, String contacto, String timer){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMNA_NOMBRE, nombre);
@@ -44,6 +46,7 @@ public class EjemploDB extends SQLiteOpenHelper {
         values.put(COLUMNA_SMS, phone);
         values.put(COLUMNA_EMAIL, email);
         values.put(COLUMNA_CONTACTO, contacto);
+        values.put(COLUMNA_TIMER, timer);
         long newRowId = db.insert(TABLA_NOMBRES, null,values);;
         db.close();
         return (int) newRowId;
@@ -54,7 +57,7 @@ public class EjemploDB extends SQLiteOpenHelper {
      */
     public void get_by_id(int id){
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] projection = {COLUMNA_ID, COLUMNA_NOMBRE, COLUMNA_MENSAJE, COLUMNA_SMS, COLUMNA_EMAIL, COLUMNA_CONTACTO};
+        String[] projection = {COLUMNA_ID, COLUMNA_NOMBRE, COLUMNA_MENSAJE, COLUMNA_SMS, COLUMNA_EMAIL, COLUMNA_CONTACTO, COLUMNA_TIMER};
         ArrayList<String> a_l = new ArrayList<>();
         Cursor cursor = db.query(TABLA_NOMBRES, projection, " _id = ?", new String[] { String.valueOf(id) }, null, null, null, null);
         if (cursor.moveToFirst()){
@@ -73,7 +76,7 @@ public class EjemploDB extends SQLiteOpenHelper {
      */
     public ArrayList<ArrayList<String>> getall(){
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] projection = {COLUMNA_ID, COLUMNA_NOMBRE, COLUMNA_MENSAJE, COLUMNA_SMS, COLUMNA_EMAIL, COLUMNA_CONTACTO};
+        String[] projection = {COLUMNA_ID, COLUMNA_NOMBRE, COLUMNA_MENSAJE, COLUMNA_SMS, COLUMNA_EMAIL, COLUMNA_CONTACTO, COLUMNA_TIMER};
         Cursor cursor = db.query(TABLA_NOMBRES, projection, null, null, null, null, null, null);
         ArrayList<ArrayList<String>> a_l_l = new ArrayList<>();
         if (cursor.moveToFirst()){
@@ -108,7 +111,7 @@ public class EjemploDB extends SQLiteOpenHelper {
     /*
         Update element in DB
      */
-    public void update_element (int id, String nombre, String mensaje, String phone, String email, String contacto){
+    public void update_element (int id, String nombre, String mensaje, String phone, String email, String contacto, String timer){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("nombre",nombre);
@@ -116,6 +119,7 @@ public class EjemploDB extends SQLiteOpenHelper {
         values.put("sms",phone);
         values.put("email",email);
         values.put("contacto",contacto);
+        values.put("timer",timer);
         int i = db.update(TABLA_NOMBRES, values, " _id = ?", new String[] { String.valueOf( id ) });
         db.close();
     }
