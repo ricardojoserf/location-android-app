@@ -2,7 +2,16 @@ package com.example.fry.salvavidapp;
 
 import java.util.List;
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProvider;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.RemoteViews;
 
 
 public class SendMailTask extends AsyncTask {

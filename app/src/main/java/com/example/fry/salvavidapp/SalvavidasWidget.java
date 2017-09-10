@@ -24,8 +24,7 @@ import java.util.Arrays;
 import javax.mail.MessagingException;
 
 
-public class WidgetController extends AppWidgetProvider implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-
+public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient = null;
     private static final String SYNC_CLICKED = "automaticWidgetSyncButtonClick";
@@ -33,6 +32,14 @@ public class WidgetController extends AppWidgetProvider implements GoogleApiClie
     AppWidgetManager appWidgetManager;
     RemoteViews remoteViews;
     ComponentName watchWidget;
+
+
+    static void updateAppWidget2(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String text) {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
+        views.setTextViewText(R.id.textView, text);
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+    }
+
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -206,3 +213,4 @@ public class WidgetController extends AppWidgetProvider implements GoogleApiClie
 
 
 }
+
