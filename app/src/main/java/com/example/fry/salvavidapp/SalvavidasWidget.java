@@ -32,37 +32,41 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
     AppWidgetManager appWidgetManager;
     RemoteViews remoteViews;
     ComponentName watchWidget;
-
-
-    static void updateAppWidget2(Context context, AppWidgetManager appWidgetManager, int appWidgetId, String text) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
-        views.setTextViewText(R.id.textView, text);
-        appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
+    private static String id_ = "-1";
 
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
         RemoteViews remoteViews;
         ComponentName watchWidget;
-
         remoteViews = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
-        watchWidget = new ComponentName(context, WidgetController.class);
+        watchWidget = new ComponentName(context, SalvavidasWidget.class);
         remoteViews.setOnClickPendingIntent(R.id.actionButton, getPendingSelfIntent(context, SYNC_CLICKED));
         appWidgetManager.updateAppWidget(watchWidget, remoteViews);
+        return;
     }
 
 
+    /*
+        Set id of the app
+     */
+    static void setId(String text){
+        id_ = text;
+    }
+
+
+    /*
+        When button is clicked and much more actions
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
-        // TODO Auto-generated method stub
         super.onReceive(context, intent);
         context0 = context;
         appWidgetManager = AppWidgetManager.getInstance(context);
         remoteViews = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
-        watchWidget = new ComponentName(context, WidgetController.class);
+        watchWidget = new ComponentName(context, SalvavidasWidget.class);
         if (SYNC_CLICKED.equals(intent.getAction())) {
+            /* Toast.makeText(context0, ("ID: "+String.valueOf( id_ )), Toast.LENGTH_SHORT).show(); */
             buildGoogleApiClient();
             mGoogleApiClient.connect();
         }
@@ -99,7 +103,7 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
         Location mLastLocation;
         // Get location
         if (ActivityCompat.checkSelfPermission(context0, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context0, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            remoteViews.setTextViewText(R.id.textView, "No permission");
+            Toast.makeText(context0, "No permission", Toast.LENGTH_SHORT).show();
             appWidgetManager.updateAppWidget(watchWidget, remoteViews);
             return;
         }
@@ -109,11 +113,18 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
             String lat = String.valueOf(mLastLocation.getLatitude());
             String lon = String.valueOf(mLastLocation.getLongitude());
             String location = "http://maps.google.com?q=" + lat + "," + lon;
-            ArrayList<String> values = getValues(0);
+            int id_int = Integer.valueOf(id_) - 1;
+            ArrayList<String> values = getValues(id_int);
             // EjemploDB db = new EjemploDB(context0);
             // ArrayList<String> values = db.get_by_id(0);
             if (values != null){
                 String alarm_name = values.get(0);
+                Toast.makeText(context0, ("Sending alarm " + String.valueOf(alarm_name)), Toast.LENGTH_SHORT).show();
+                /*
+                RemoteViews views = new RemoteViews(context0.getPackageName(), R.layout.salvavidas_widget);
+                views.setTextViewText(R.id.actionButton, alarm_name);
+                appWidgetManager.updateAppWidget(watchWidget, views);
+                */
                 String final_message = values.get(1) + "\nMy location: "+String.valueOf(location);
                 String phone_contact = values.get(2);
                 String email = values.get(3);
@@ -124,11 +135,9 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
                 if(!phone_contact.equals("")){
                     sendSMSMessage(phone_contact, final_message);
                 }
-                remoteViews.setTextViewText(R.id.textView, (String.valueOf(alarm_name)) );
                 appWidgetManager.updateAppWidget(watchWidget, remoteViews);
             }
         } else {
-            remoteViews.setTextViewText(R.id.textView, "FAIL");
             appWidgetManager.updateAppWidget(watchWidget, remoteViews);
         }
     }
@@ -168,9 +177,9 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
         }
         try {
             new SendMailTask().execute("salvavidapp.mail", "qweqweqwe", Arrays.asList(destination), "Salvavidapp Message", message);
-            Toast.makeText(context0, "Email sent.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context0, "Email sent.", Toast.LENGTH_SHORT).show();
         }catch(Exception e){
-            Toast.makeText(context0, "Email not sent.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context0, "Email not sent.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -185,9 +194,9 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
         SmsManager smsManager = SmsManager.getDefault();
         try {
             smsManager.sendTextMessage(destination, null, message, null, null);
-            Toast.makeText(context0, "SMS sent.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context0, "SMS sent.", Toast.LENGTH_SHORT).show();
         }catch(Exception e){
-            Toast.makeText(context0, "SMS not sent.", Toast.LENGTH_LONG).show();
+            Toast.makeText(context0, "SMS not sent.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -213,4 +222,3 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
 
 
 }
-
