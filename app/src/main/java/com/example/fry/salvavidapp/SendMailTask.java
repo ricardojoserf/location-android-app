@@ -13,6 +13,10 @@ public class SendMailTask extends AsyncTask {
 		sendMailActivity = activity;
 	}
 
+	public SendMailTask() {
+
+	}
+
 	protected void onPreExecute() {
 	}
 

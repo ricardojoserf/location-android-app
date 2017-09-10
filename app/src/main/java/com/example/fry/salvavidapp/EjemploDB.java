@@ -55,7 +55,7 @@ public class EjemploDB extends SQLiteOpenHelper {
     /*
         Get element by id
      */
-    public void get_by_id(int id){
+    public ArrayList<String> get_by_id(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         String[] projection = {COLUMNA_ID, COLUMNA_NOMBRE, COLUMNA_MENSAJE, COLUMNA_SMS, COLUMNA_EMAIL, COLUMNA_CONTACTO, COLUMNA_TIMER};
         ArrayList<String> a_l = new ArrayList<>();
@@ -69,6 +69,7 @@ public class EjemploDB extends SQLiteOpenHelper {
         }
         cursor.close();
         db.close();
+        return a_l;
     }
 
     /*

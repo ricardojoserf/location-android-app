@@ -103,7 +103,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                 }
             }
         });
-        // Button SEND
+        // Button TEST
         button_send.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try{
