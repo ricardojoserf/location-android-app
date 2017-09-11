@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 
 
-public class EjemploDB extends SQLiteOpenHelper {
+public class AlarmsDB extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "ejemplo.db";
@@ -27,7 +27,7 @@ public class EjemploDB extends SQLiteOpenHelper {
             + COLUMNA_CONTACTO  + " text, "+  COLUMNA_EMAIL + " text, "
             +  COLUMNA_TIMER + " text);";
 
-    public EjemploDB(Context context) {
+    public AlarmsDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

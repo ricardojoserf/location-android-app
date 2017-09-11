@@ -30,54 +30,21 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
     private static final String SYNC_CLICKED = "automaticWidgetSyncButtonClick";
     Context context0;
     AppWidgetManager appWidgetManager;
-    RemoteViews remoteViews;
-    ComponentName watchWidget;
     private static String id_ = "-1";
-    private static String appid_ = "-1";
-
     static boolean widget_already_exists = false;
-
-
-
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
-        views.setTextViewText(R.id.actionButton, String.valueOf(appWidgetId));
-        appid_ = String.valueOf(appWidgetId);
-        appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
 
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        final int N = appWidgetIds.length;
-        int appWidgetId;
-
-        for (int i = 0; i < N; ++i) {
-            appWidgetId = appWidgetIds[i];
-            RemoteViews remoteViews;
-            remoteViews = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
+        for (int i = 0; i < appWidgetIds.length; ++i) {
+            int appWidgetId = appWidgetIds[i];
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
             Intent intent = new Intent(context, SalvavidasWidget.class);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-            updateAppWidget(context, appWidgetManager, appWidgetId);
             remoteViews.setOnClickPendingIntent(R.id.actionButton, getPendingSelfIntent(context, SYNC_CLICKED));
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
         }
-
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-
-
-    }
-
-
-
-
-    /*
-        Set id of the app
-     */
-    static void setId(String text, String appid, Context context){
-        id_ = text;
-        appid_ = appid;
     }
 
 
@@ -86,24 +53,46 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-            super.onReceive(context, intent);
-            context0 = context;
-            appWidgetManager = AppWidgetManager.getInstance(context);
-            remoteViews = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
-            watchWidget = new ComponentName(context, SalvavidasWidget.class);
-            if (SYNC_CLICKED.equals(intent.getAction())) {
-                widget_already_exists = true;
-                if (id_ != "-1") {
+        super.onReceive(context, intent);
+        context0 = context;
+        appWidgetManager = AppWidgetManager.getInstance(context);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
+        ComponentName watchWidget = new ComponentName(context, SalvavidasWidget.class);
+        if (SYNC_CLICKED.equals(intent.getAction())) {
+            widget_already_exists = true;
+            if (id_ != "-1") {
+                buildGoogleApiClient();
+                mGoogleApiClient.connect();
+            }
+            else{
+                IdDB db_ids = new IdDB(context);
+                ArrayList<ArrayList<String>> all_ids =db_ids.getall();
+                String id_to_set = all_ids.get( all_ids.size()-1 ).get(1);
+                id_ = id_to_set;
+                try{
                     buildGoogleApiClient();
                     mGoogleApiClient.connect();
+                }catch(Exception e){
+                    Toast.makeText(context, "Delete widget and create it again please.", Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            if (AppWidgetManager.ACTION_APPWIDGET_DELETED.equals(intent.getAction())) {
-                widget_already_exists = false;
-                return;
             }
+        }
+        if (AppWidgetManager.ACTION_APPWIDGET_DELETED.equals(intent.getAction())) {
+            widget_already_exists = false;
+        }
+    }
 
+
+    /*
+    Set id of the app
+    */
+    static void setId(String text, Context context){
+        id_ = text;
+        IdDB db_ids = new IdDB(context);
+        db_ids.add_element(text);
+        ArrayList<ArrayList<String>> all_ids =db_ids.getall();
+        Toast.makeText(context, String.valueOf(all_ids), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -132,7 +121,7 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
     /*
         Send sms or email
      */
-    public void send_widget(RemoteViews remoteViews, AppWidgetManager appWidgetManager, ComponentName watchWidget) throws MessagingException {
+    public void send_widget() throws MessagingException {
         Location mLastLocation;
         // Get location
         if (ActivityCompat.checkSelfPermission(context0, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context0, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -149,7 +138,6 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
             ArrayList<String> values = getValues(id_int);
             if (values != null){
                 String alarm_name = values.get(0);
-                int[] appWidgetsIds=appWidgetManager.getAppWidgetIds(watchWidget);
                 Toast.makeText(context0, ("Sending alarm " + String.valueOf(alarm_name) ), Toast.LENGTH_SHORT).show();
                 String final_message = values.get(1) + "\nMy location: "+String.valueOf(location);
                 String phone_contact = values.get(2);
@@ -161,7 +149,6 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
                 if(!phone_contact.equals("")){
                     sendSMSMessage(phone_contact, final_message);
                 }
-                // appWidgetManager.updateAppWidget(watchWidget, remoteViews);
             }
         }
     }
@@ -171,7 +158,7 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
         Get values of an alarm given the id
      */
     public ArrayList<String> getValues(int id) {
-        EjemploDB db = new EjemploDB(context0);
+        AlarmsDB db = new AlarmsDB(context0);
         ArrayList<ArrayList<String>> list_lists = db.getall();
         try{
             String alarm_name = String.valueOf(list_lists.get(id).get(1));
@@ -228,7 +215,7 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         try {
-            send_widget(remoteViews, appWidgetManager, watchWidget);
+            send_widget();
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -244,16 +231,5 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
-
-    /*
-    @Override
-    public void onEnabled(Context context){}
-
-    @Override
-    public void onDisabled(Context context){}
-
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds){}
-    */
 
 }

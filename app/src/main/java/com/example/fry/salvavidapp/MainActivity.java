@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lista);
         final ListView listview = findViewById(R.id.listalarms);
-        EjemploDB db = new EjemploDB( getApplicationContext() );
+        AlarmsDB db = new AlarmsDB( getApplicationContext() );
         final ArrayList<ArrayList<String>> list_lists = db.getall();
         final ArrayList<String> list_names = new ArrayList<>();
         final ArrayList<String> list_ids = new ArrayList<>();
@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void run() {
                                 String real_id = list_ids.get(position);
-                                EjemploDB db = new EjemploDB( getApplicationContext() );
+                                AlarmsDB db = new AlarmsDB( getApplicationContext() );
                                 db.eliminar(Integer.valueOf(real_id));
                                 list_lists.clear();
                                 list_names.clear();
@@ -105,7 +105,7 @@ public class MainActivity extends Activity {
     public void changeView(final ArrayList<String> list_ids, int position, ArrayList<ArrayList<String>> list_lists){
         Intent myIntent = new Intent(this, PantallaPrincipal.class);
         Bundle b = new Bundle();
-        EjemploDB db = new EjemploDB( getApplicationContext() );
+        AlarmsDB db = new AlarmsDB( getApplicationContext() );
         list_lists = db.getall();
         String real_id = list_ids.get(position);
         for (int j=0;j<list_lists.size();j++){

@@ -34,7 +34,7 @@ public class SalvavidasWidgetConfigureActivity extends Activity {
 
         // Spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        EjemploDB db = new EjemploDB(this);
+        AlarmsDB db = new AlarmsDB(this);
         ArrayList<ArrayList<String>> list_lists = db.getall();
         final ArrayList<String> list_names = new ArrayList<>();
         final ArrayList<String> list_ids = new ArrayList<>();
@@ -71,7 +71,7 @@ public class SalvavidasWidgetConfigureActivity extends Activity {
                             id_ = list_ids.get(k);
                         }
                     }
-                    SalvavidasWidget.setId(id_, String.valueOf(mAppWidgetId), context);
+                    SalvavidasWidget.setId(id_, context);
                     Intent resultValue = new Intent();
                     resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
                     setResult(RESULT_OK, resultValue);
@@ -79,8 +79,6 @@ public class SalvavidasWidgetConfigureActivity extends Activity {
                 }
             }
         });
-
-
 
         if(SalvavidasWidget.widget_already_exists == false) {
             Intent intent = getIntent();

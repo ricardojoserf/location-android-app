@@ -124,7 +124,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         button_store.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(flag_update){
-                    EjemploDB db = new EjemploDB( getApplicationContext());
+                    AlarmsDB db = new AlarmsDB( getApplicationContext());
                     String name_contact = text_name_contact.getText().toString();
                     String phone_contact = text_phone_contact.getText().toString();
                     String email = text_email.getText().toString();
@@ -144,7 +144,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                     back();
                 }
                 else{
-                    EjemploDB db = new EjemploDB( getApplicationContext());
+                    AlarmsDB db = new AlarmsDB( getApplicationContext());
                     if(check_sms.isChecked() && !check_email.isChecked()){
                         if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_minutes.getText())) ) {
                             db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "", text_name_contact.getText().toString(), text_minutes.getText().toString());
