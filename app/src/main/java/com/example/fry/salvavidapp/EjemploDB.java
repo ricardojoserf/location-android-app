@@ -22,7 +22,7 @@ public class EjemploDB extends SQLiteOpenHelper {
     public static final String COLUMNA_TIMER = "timer";
 
 
-    private static final String SQL_CREAR = "create table " + TABLA_NOMBRES + "("
+    private static final String SQL_CREAR_ALARM = "create table " + TABLA_NOMBRES + "("
             + COLUMNA_ID + " integer primary key autoincrement, " + COLUMNA_NOMBRE + " text, " + COLUMNA_MENSAJE + " text, " + COLUMNA_SMS + " text, "
             + COLUMNA_CONTACTO  + " text, "+  COLUMNA_EMAIL + " text, "
             +  COLUMNA_TIMER + " text);";
@@ -31,7 +31,7 @@ public class EjemploDB extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public void onCreate(SQLiteDatabase db) { db.execSQL(SQL_CREAR); }
+    public void onCreate(SQLiteDatabase db) { db.execSQL(SQL_CREAR_ALARM); }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
 

@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 
@@ -24,9 +26,12 @@ public class SalvavidasWidgetConfigureActivity extends Activity {
 
     @Override
     public void onCreate(Bundle icicle) {
+
         super.onCreate(icicle);
         setResult(RESULT_CANCELED);
         setContentView(R.layout.salvavidas_widget_configure);
+
+
         // Spinner
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         EjemploDB db = new EjemploDB(this);
@@ -49,37 +54,54 @@ public class SalvavidasWidgetConfigureActivity extends Activity {
         };
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_customized);
         spinner.setAdapter(adapter);
+
+
         // Button
         Button button = findViewById(R.id.add_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final Context context = SalvavidasWidgetConfigureActivity.this;
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                Spinner mySpinner=(Spinner) findViewById(R.id.spinner);
-                String text = mySpinner.getSelectedItem().toString();
-                String id_ = "-1";
-                for(int k=0;k<list_names.size();k++){
-                    if(list_names.get(k) == text){
-                        id_ = list_ids.get(k);
+                if(SalvavidasWidget.widget_already_exists == false) {
+                    final Context context = SalvavidasWidgetConfigureActivity.this;
+                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                    Spinner mySpinner=(Spinner) findViewById(R.id.spinner);
+                    String text = mySpinner.getSelectedItem().toString();
+                    String id_ = "-1";
+                    for(int k=0;k<list_names.size();k++){
+                        if(list_names.get(k) == text){
+                            id_ = list_ids.get(k);
+                        }
                     }
+                    SalvavidasWidget.setId(id_, String.valueOf(mAppWidgetId), context);
+                    Intent resultValue = new Intent();
+                    resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+                    setResult(RESULT_OK, resultValue);
+                    finish();
                 }
-                SalvavidasWidget.setId(id_);
-                Intent resultValue = new Intent();
-                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-                setResult(RESULT_OK, resultValue);
-                finish();
             }
         });
-        // Find the widget id from the intent.
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+
+
+
+        if(SalvavidasWidget.widget_already_exists == false) {
+            Intent intent = getIntent();
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                mAppWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            }
+            if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+                finish();
+                return;
+            }
         }
-        // If this activity was started with an intent without an app widget ID, finish with an error.
-        if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+        else{
+            onlyOne(this);
             finish();
             return;
         }
+
+    }
+
+    public static void onlyOne(Context context){
+        Toast.makeText(context, "No more widgets allowed, please delete one." , Toast.LENGTH_SHORT).show();
     }
 }
