@@ -76,6 +76,10 @@ public class SalvavidasWidgetConfigureActivity extends Activity {
                     resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
                     setResult(RESULT_OK, resultValue);
                     finish();
+                }else{
+                    onlyOne(SalvavidasWidgetConfigureActivity.this);
+                    finish();
+                    return;
                 }
             }
         });

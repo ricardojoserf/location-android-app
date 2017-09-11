@@ -24,6 +24,7 @@ import java.util.Arrays;
 import javax.mail.MessagingException;
 
 import static android.R.attr.id;
+import static android.app.PendingIntent.getActivity;
 
 
 public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -155,12 +156,23 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
                 String final_message = values.get(1) + "\nMy location: "+String.valueOf(location);
                 String phone_contact = values.get(2);
                 String email = values.get(3);
-                // String timer = values.get(4);
-                if(!email.equals("")){
-                    sendEmailMessage(email, final_message);
-                }
-                if(!phone_contact.equals("")){
-                    sendSMSMessage(phone_contact, final_message);
+                String timer = values.get(4);
+                int jj = 0;
+                while(jj++ < 10){
+                    try {
+                        if(!email.equals("")){
+                            sendEmailMessage(email, final_message);
+                        }
+                        if(!phone_contact.equals("")){
+                            sendSMSMessage(phone_contact, final_message);
+                        }
+                        int ms = (int) (60000*Double.valueOf(timer));
+                        if(ms<1000){ms=1000;}
+                        Thread.sleep(ms);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
