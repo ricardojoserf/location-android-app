@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import javax.mail.MessagingException;
 
+import static android.R.attr.id;
+
 
 public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -65,10 +67,6 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
                 mGoogleApiClient.connect();
             }
             else{
-                IdDB db_ids = new IdDB(context);
-                ArrayList<ArrayList<String>> all_ids =db_ids.getall();
-                String id_to_set = all_ids.get( all_ids.size()-1 ).get(1);
-                id_ = id_to_set;
                 try{
                     buildGoogleApiClient();
                     mGoogleApiClient.connect();
@@ -89,10 +87,17 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
     */
     static void setId(String text, Context context){
         id_ = text;
+        AlarmsDB db = new AlarmsDB(context);
+
+        ArrayList<ArrayList<String>> list_lists = db.getall();
+        String alarm_name = String.valueOf(list_lists.get(Integer.parseInt(id_)-1).get(1));
+        String basic_msg = String.valueOf(list_lists.get(Integer.parseInt(id_)-1).get(2));
+        String phone_contact = String.valueOf(list_lists.get(Integer.parseInt(id_)-1).get(3));
+        String email = String.valueOf(list_lists.get(Integer.parseInt(id_)-1).get(4));
+        String timer = String.valueOf(list_lists.get(Integer.parseInt(id_)-1).get(6));
+
         IdDB db_ids = new IdDB(context);
-        db_ids.add_element(text);
-        ArrayList<ArrayList<String>> all_ids =db_ids.getall();
-        Toast.makeText(context, String.valueOf(all_ids), Toast.LENGTH_SHORT).show();
+        db_ids.add_element(alarm_name, basic_msg, phone_contact, email, timer);
     }
 
 
@@ -134,8 +139,16 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
             String lat = String.valueOf(mLastLocation.getLatitude());
             String lon = String.valueOf(mLastLocation.getLongitude());
             String location = "http://maps.google.com?q=" + lat + "," + lon;
-            int id_int = Integer.valueOf(id_) - 1;
-            ArrayList<String> values = getValues(id_int);
+            ArrayList<String> values = null;
+            if(id_ != "-1"){
+                int id_int = Integer.valueOf(id_) - 1;
+                values = getValues(id_int);
+            }
+            else{
+                IdDB db_ids = new IdDB(context0);
+                ArrayList<ArrayList<String>> all_ids =db_ids.getall();
+                values = all_ids.get(all_ids.size()-1);
+            }
             if (values != null){
                 String alarm_name = values.get(0);
                 Toast.makeText(context0, ("Sending alarm " + String.valueOf(alarm_name) ), Toast.LENGTH_SHORT).show();
@@ -159,6 +172,31 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
      */
     public ArrayList<String> getValues(int id) {
         AlarmsDB db = new AlarmsDB(context0);
+        ArrayList<ArrayList<String>> list_lists = db.getall();
+        try{
+            String alarm_name = String.valueOf(list_lists.get(id).get(1));
+            String basic_msg = String.valueOf(list_lists.get(id).get(2));
+            String phone_contact = String.valueOf(list_lists.get(id).get(3));
+            String email = String.valueOf(list_lists.get(id).get(4));
+            String timer = String.valueOf(list_lists.get(id).get(6));
+            ArrayList<String> vals = new ArrayList<>();
+            vals.add(alarm_name);
+            vals.add(basic_msg);
+            vals.add(phone_contact);
+            vals.add(email);
+            vals.add(timer);
+            return vals;
+        }catch(Exception e){
+            return null;
+        }
+    }
+
+
+    /*
+    Get values of an alarm given the id
+ */
+    public static ArrayList<String> getValues2(Context context, int id) {
+        AlarmsDB db = new AlarmsDB(context);
         ArrayList<ArrayList<String>> list_lists = db.getall();
         try{
             String alarm_name = String.valueOf(list_lists.get(id).get(1));
