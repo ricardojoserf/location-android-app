@@ -23,8 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import javax.mail.MessagingException;
 
-import static android.R.attr.id;
-import static android.app.PendingIntent.getActivity;
+
 
 
 public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -35,6 +34,8 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
     AppWidgetManager appWidgetManager;
     private static String id_ = "-1";
     static boolean widget_already_exists = false;
+    boolean start_stop = false;
+
 
 
     @Override
@@ -59,22 +60,33 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
         super.onReceive(context, intent);
         context0 = context;
         appWidgetManager = AppWidgetManager.getInstance(context);
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
-        ComponentName watchWidget = new ComponentName(context, SalvavidasWidget.class);
         if (SYNC_CLICKED.equals(intent.getAction())) {
-            widget_already_exists = true;
-            if (id_ != "-1") {
-                buildGoogleApiClient();
-                mGoogleApiClient.connect();
-            }
-            else{
-                try{
+            if (start_stop == false) {
+                // RemoteViews remoteViews;
+                // remoteViews = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
+                // ComponentName watchWidget = new ComponentName(context, SalvavidasWidget.class);
+                // remoteViews.setTextViewText(R.id.actionButton, "STOP");
+                // appWidgetManager.updateAppWidget(watchWidget, remoteViews);
+                start_stop = true;
+                widget_already_exists = true;
+                if (id_ != "-1") {
                     buildGoogleApiClient();
                     mGoogleApiClient.connect();
-                }catch(Exception e){
-                    Toast.makeText(context, "Delete widget and create it again please.", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        buildGoogleApiClient();
+                        mGoogleApiClient.connect();
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Delete widget and create it again please.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-
+            }else if (start_stop == true) {
+                // RemoteViews remoteViews;
+                // remoteViews = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
+                // ComponentName watchWidget = new ComponentName(context, SalvavidasWidget.class);
+                // remoteViews.setTextViewText(R.id.actionButton, "START");
+                // appWidgetManager.updateAppWidget(watchWidget, remoteViews);
+                start_stop = false;
             }
         }
         if (AppWidgetManager.ACTION_APPWIDGET_DELETED.equals(intent.getAction())) {
@@ -89,14 +101,12 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
     static void setId(String text, Context context){
         id_ = text;
         AlarmsDB db = new AlarmsDB(context);
-
         ArrayList<ArrayList<String>> list_lists = db.getall();
         String alarm_name = String.valueOf(list_lists.get(Integer.parseInt(id_)-1).get(1));
         String basic_msg = String.valueOf(list_lists.get(Integer.parseInt(id_)-1).get(2));
         String phone_contact = String.valueOf(list_lists.get(Integer.parseInt(id_)-1).get(3));
         String email = String.valueOf(list_lists.get(Integer.parseInt(id_)-1).get(4));
         String timer = String.valueOf(list_lists.get(Integer.parseInt(id_)-1).get(6));
-
         IdDB db_ids = new IdDB(context);
         db_ids.add_element(alarm_name, basic_msg, phone_contact, email, timer);
     }
@@ -157,8 +167,7 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
                 String phone_contact = values.get(2);
                 String email = values.get(3);
                 String timer = values.get(4);
-                int jj = 0;
-                while(jj++ < 10){
+                while(start_stop){
                     try {
                         if(!email.equals("")){
                             sendEmailMessage(email, final_message);

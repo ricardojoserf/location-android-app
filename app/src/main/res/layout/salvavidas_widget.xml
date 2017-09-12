@@ -6,25 +6,11 @@
     android:padding="@dimen/widget_margin"
     android:background="#55000000">
 
-    <!--
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="@string/name"
-        android:textSize="@dimen/abc_text_size_large_material"
-        android:textStyle="bold"/>
-
-    -->
-
     <Button
         android:id="@+id/actionButton"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="@string/start"/>
+        android:text="@string/start_stop"/>
 
 </LinearLayout>
