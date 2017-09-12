@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -34,8 +36,7 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
     AppWidgetManager appWidgetManager;
     private static String id_ = "-1";
     static boolean widget_already_exists = false;
-    boolean start_stop = false;
-
+    static boolean start_stop = false;
 
 
     @Override
@@ -62,34 +63,20 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
         appWidgetManager = AppWidgetManager.getInstance(context);
         if (SYNC_CLICKED.equals(intent.getAction())) {
             if (start_stop == false) {
-                // RemoteViews remoteViews;
-                // remoteViews = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
-                // ComponentName watchWidget = new ComponentName(context, SalvavidasWidget.class);
-                // remoteViews.setTextViewText(R.id.actionButton, "STOP");
-                // appWidgetManager.updateAppWidget(watchWidget, remoteViews);
                 start_stop = true;
                 widget_already_exists = true;
-                if (id_ != "-1") {
+                try {
                     buildGoogleApiClient();
                     mGoogleApiClient.connect();
-                } else {
-                    try {
-                        buildGoogleApiClient();
-                        mGoogleApiClient.connect();
-                    } catch (Exception e) {
-                        Toast.makeText(context, "Delete widget and create it again please.", Toast.LENGTH_SHORT).show();
-                    }
+                } catch (Exception e) {
+                    Toast.makeText(context, "Delete widget and create it again please.", Toast.LENGTH_SHORT).show();
                 }
-            }else if (start_stop == true) {
-                // RemoteViews remoteViews;
-                // remoteViews = new RemoteViews(context.getPackageName(), R.layout.salvavidas_widget);
-                // ComponentName watchWidget = new ComponentName(context, SalvavidasWidget.class);
-                // remoteViews.setTextViewText(R.id.actionButton, "START");
-                // appWidgetManager.updateAppWidget(watchWidget, remoteViews);
+            }else if (start_stop == true){
                 start_stop = false;
+                Toast.makeText(context, "Stopped", Toast.LENGTH_SHORT).show();
             }
         }
-        if (AppWidgetManager.ACTION_APPWIDGET_DELETED.equals(intent.getAction())) {
+        else if (AppWidgetManager.ACTION_APPWIDGET_DELETED.equals(intent.getAction())) {
             widget_already_exists = false;
         }
     }
@@ -162,25 +149,29 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
             }
             if (values != null){
                 String alarm_name = values.get(0);
-                Toast.makeText(context0, ("Sending alarm " + String.valueOf(alarm_name) ), Toast.LENGTH_SHORT).show();
-                String final_message = values.get(1) + "\nMy location: "+String.valueOf(location);
-                String phone_contact = values.get(2);
-                String email = values.get(3);
+                // Toast.makeText(context0, ("Sending alarm " + String.valueOf(alarm_name) ), Toast.LENGTH_SHORT).show();
+                final String final_message = values.get(1) + "\nMy location: "+String.valueOf(location);
+                final String phone_contact = values.get(2);
+                final String email = values.get(3);
                 String timer = values.get(4);
+
+                start_stop = true;
+
+                long startTime = System.currentTimeMillis();
+                Double dbl_timer = Double.valueOf(timer) * 60.0 * 1000.0;
                 while(start_stop){
-                    try {
+                    long estimatedTime = System.currentTimeMillis() - startTime;
+                    if(estimatedTime % dbl_timer == 0.0){
                         if(!email.equals("")){
-                            sendEmailMessage(email, final_message);
+                            try {
+                                sendEmailMessage(email, final_message);
+                            } catch (MessagingException e) {
+                                e.printStackTrace();
+                            }
                         }
                         if(!phone_contact.equals("")){
                             sendSMSMessage(phone_contact, final_message);
                         }
-                        int ms = (int) (60000*Double.valueOf(timer));
-                        if(ms<1000){ms=1000;}
-                        Thread.sleep(ms);
-                    }
-                    catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
             }
