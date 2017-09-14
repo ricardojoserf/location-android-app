@@ -1,4 +1,4 @@
-package com.example.fry.salvavidapp;
+package salvavidapp;
 
 import android.content.ContentValues;
 import android.content.Context;

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:background="@color/colorPrimary"
-    tools:context="com.example.fry.salvavidapp.PantallaPrincipal"
+    tools:context="salvavidapp.PantallaPrincipal"
     tools:layout_editor_absoluteY="25dp"
     tools:layout_editor_absoluteX="0dp">
 

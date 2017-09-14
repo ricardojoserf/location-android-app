@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:background="@color/colorPrimary"
-    tools:context="com.example.fry.salvavidapp.PantallaPrincipal"
+    tools:context="salvavidapp.PantallaPrincipal"
     tools:layout_editor_absoluteY="25dp"
     tools:layout_editor_absoluteX="0dp">
 
@@ -20,7 +20,9 @@
         tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/editText2"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/editText2" />
+        app:layout_constraintLeft_toLeftOf="@+id/editText2"
+        android:layout_marginLeft="0dp"
+        android:layout_marginBottom="-26dp" />
 
     <EditText
         android:id="@+id/editText2"
@@ -49,7 +51,9 @@
         tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/editText3"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/editText3" />
+        app:layout_constraintLeft_toLeftOf="@+id/editText3"
+        android:layout_marginLeft="0dp"
+        android:layout_marginBottom="-26dp" />
 
     <EditText
         android:id="@+id/editText"
@@ -136,7 +140,7 @@
         android:text="@string/save"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="39dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintHorizontal_bias="0.862" />
@@ -148,10 +152,11 @@
         android:text="@string/name"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:layout_constraintTop_creator="1"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="50dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="@+id/editText5"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="0dp" />
 
     <EditText
         android:id="@+id/editText5"
@@ -181,7 +186,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintTop_toBottomOf="@+id/editText4"
-        app:layout_constraintVertical_bias="0.965"
+        app:layout_constraintVertical_bias="0.74"
 
 
         />
@@ -276,18 +281,6 @@
         tools:layout_editor_absoluteY="20dp"
         tools:layout_editor_absoluteX="0dp" />
 
-    <EditText
-        android:id="@+id/editText8"
-        android:layout_width="59dp"
-        android:layout_height="47dp"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.331"
-        app:layout_constraintTop_toBottomOf="@+id/editText4"
-        android:layout_marginTop="87dp" />
-
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -306,6 +299,7 @@
         tools:layout_editor_absoluteY="20dp"
         tools:layout_editor_absoluteX="0dp" />
 
+    <!--
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
@@ -319,6 +313,18 @@
         android:layout_marginTop="96dp"
         android:layout_marginStart="49dp" />
 
+    <EditText
+        android:id="@+id/editText8"
+        android:layout_width="59dp"
+        android:layout_height="47dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.331"
+        app:layout_constraintTop_toBottomOf="@+id/editText4"
+        android:layout_marginTop="87dp" />
+
     <TextView
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
@@ -330,5 +336,6 @@
         app:layout_constraintTop_toBottomOf="@+id/editText4"
         android:layout_marginTop="96dp"
         app:layout_constraintHorizontal_bias="0.562" />
+        -->
 
 </android.support.constraint.ConstraintLayout>

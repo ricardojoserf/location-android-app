@@ -1,4 +1,4 @@
-package com.example.fry.salvavidapp;
+package salvavidapp;
 
 import java.util.List;
 import android.app.Activity;

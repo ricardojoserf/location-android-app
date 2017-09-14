@@ -1,4 +1,4 @@
-package com.example.fry.salvavidapp;
+package salvavidapp;
 
 import android.Manifest;
 import android.app.PendingIntent;
@@ -157,7 +157,18 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
 
                 start_stop = true;
 
-                long startTime = System.currentTimeMillis();
+                if(!email.equals("")){
+                    try {
+                        sendEmailMessage(email, final_message);
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(!phone_contact.equals("")){
+                    sendSMSMessage(phone_contact, final_message);
+                }
+
+                /*long startTime = System.currentTimeMillis();
                 Double dbl_timer = Double.valueOf(timer) * 60.0 * 1000.0;
                 while(start_stop){
                     long estimatedTime = System.currentTimeMillis() - startTime;
@@ -173,7 +184,8 @@ public class SalvavidasWidget extends AppWidgetProvider implements GoogleApiClie
                             sendSMSMessage(phone_contact, final_message);
                         }
                     }
-                }
+                }*/
+
             }
         }
     }

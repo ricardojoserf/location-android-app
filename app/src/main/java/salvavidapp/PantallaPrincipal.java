@@ -1,4 +1,4 @@
-package com.example.fry.salvavidapp;
+package salvavidapp;
 
 import android.support.annotation.NonNull;
 import android.content.Intent;
@@ -29,9 +29,6 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TimerTask;
-//import java.util.Timer;
-//import java.util.TimerTask;
 import javax.mail.MessagingException;
 
 
@@ -48,6 +45,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_principal);
         String[] permissions = {Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET};
@@ -59,11 +57,12 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
         final EditText text_message = (EditText) findViewById(R.id.editText2);
         final EditText text_email = (EditText) findViewById(R.id.editText4);
         final EditText text_alarm_name = (EditText) findViewById(R.id.editText5);
-        final EditText text_minutes = (EditText) findViewById(R.id.editText8);
+        // final EditText text_minutes = (EditText) findViewById(R.id.editText8);
         final CheckBox check_sms = (CheckBox) findViewById(R.id.checkBox);
         final CheckBox check_email = (CheckBox) findViewById(R.id.checkBox2);
         Button button_send = (Button) findViewById(R.id.button);
         Button button_store = (Button) findViewById(R.id.button2);
+
         // Complete values if there are extras
         Bundle b = getIntent().getExtras();
         if(b != null){
@@ -81,10 +80,13 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                 check_email.setChecked(true);
             }
             text_name_contact.setText(values.get(4));
-            text_minutes.setText(values.get(5));
+            // text_minutes.setText(values.get(5));
+
             // Flag update
             flag_update = true;
+
         }
+
         // Autocomplete textbox
         text_name_contact.setAdapter(adapter);
         text_name_contact .addTextChangedListener(new TextWatcher() {
@@ -103,23 +105,28 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                 }
             }
         });
+
         // Button TEST
         button_send.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                /*
                 try{
                     minutes = Double.valueOf(text_minutes.getText().toString());
                 }catch(Exception e){
                     Toast.makeText(PantallaPrincipal.this, "Timer can not be empty", Toast.LENGTH_SHORT).show();
                     return;
-                }
+                }*/
+
                 if (mGoogleApiClient != null) {
-                    timerCoord();
+                    //timerCoord();
+                    send();
                 }
                 else{
                     createGoogleApiClient();
                 }
             }
         });
+
         // Button STORE
         button_store.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -138,31 +145,34 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
                     }
                     if(!check_sms.isChecked()){name_contact=""; phone_contact="";}
                     if(!check_email.isChecked()){email="";}
-                    db.update_element(id_global, text_alarm_name.getText().toString(), text_message.getText().toString(),
-                            phone_contact, email, name_contact, text_minutes.getText().toString());
+                    // db.update_element(id_global, text_alarm_name.getText().toString(), text_message.getText().toString(), phone_contact, email, name_contact, text_minutes.getText().toString());
+                    db.update_element(id_global, text_alarm_name.getText().toString(), text_message.getText().toString(), phone_contact, email, name_contact, "");
                     // Toast.makeText(getApplicationContext(), "Element updated.", Toast.LENGTH_LONG).show();
                     back();
                 }
                 else{
                     AlarmsDB db = new AlarmsDB( getApplicationContext());
                     if(check_sms.isChecked() && !check_email.isChecked()){
-                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_minutes.getText())) ) {
-                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "", text_name_contact.getText().toString(), text_minutes.getText().toString());
-                            // Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                        // if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_minutes.getText())) ) {
+                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) ) {
+                            // db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "", text_name_contact.getText().toString(), text_minutes.getText().toString());
+                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), "", text_name_contact.getText().toString(), "");
                             back();
                         }
                     }
                     else if(!check_sms.isChecked() && check_email.isChecked()){
-                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText())) && (!TextUtils.isEmpty(text_minutes.getText()))) {
-                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "", text_email.getText().toString(), "", text_minutes.getText().toString());
-                            // Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                        // if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText())) && (!TextUtils.isEmpty(text_minutes.getText()))) {
+                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_email.getText()))) {
+                            // db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "", text_email.getText().toString(), "", text_minutes.getText().toString());
+                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), "", text_email.getText().toString(), "", "");
                             back();
                         }
                     }
                     else if(check_sms.isChecked() && check_email.isChecked()){
-                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_email.getText())) && (!TextUtils.isEmpty(text_minutes.getText())) ) {
-                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString(), text_minutes.getText().toString());
-                            // Toast.makeText(getApplicationContext(), "Element added.", Toast.LENGTH_LONG).show();
+                        // if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_email.getText())) && (!TextUtils.isEmpty(text_minutes.getText())) ) {
+                        if((!TextUtils.isEmpty(text_alarm_name.getText())) && (!TextUtils.isEmpty(text_phone_contact.getText())) && (!TextUtils.isEmpty(text_email.getText()))  ) {
+                            // db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString(), text_minutes.getText().toString());
+                            db.add_element(text_alarm_name.getText().toString(), text_message.getText().toString(), text_phone_contact.getText().toString(), text_email.getText().toString(), text_name_contact.getText().toString(), "");
                             back();
                         }
                     }
@@ -401,8 +411,8 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        timerCoord();
-        //send();
+        //timerCoord();
+        send();
     }
 
 

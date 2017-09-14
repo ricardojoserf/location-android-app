@@ -30,5 +30,6 @@
     <string name="configure">Configure</string>
     <string name="add_widget">Add widget</string>
     <string name="start_stop">START/STOP</string>
+    <string name="send2">Send</string>
 
 </resources>

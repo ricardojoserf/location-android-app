@@ -1,4 +1,4 @@
-package com.example.fry.salvavidapp;
+package salvavidapp;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;

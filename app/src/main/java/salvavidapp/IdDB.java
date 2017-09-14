@@ -1,4 +1,4 @@
-package com.example.fry.salvavidapp;
+package salvavidapp;
 
 /**
  * Created by Fry on 11-Sep-17.
