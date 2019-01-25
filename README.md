@@ -4,9 +4,11 @@ Android app to send your GPS location via SMS and/or email to whoever you want, 
 
 It allows to create one widget with one of the alarms created, to start or stop the process.
 
+------------------------------------
 
 **DEPRECATED** In 2017 it worked 100 %, now widget and DB are not working properly
 
+------------------------------------
 
 You can set:
 
@@ -21,6 +23,7 @@ You can set:
 - Number of minutes between sending them
 
 
+------------------------------------
 
 ## Screenshots
 
