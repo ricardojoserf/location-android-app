@@ -401,7 +401,7 @@ public class PantallaPrincipal extends AppCompatActivity  implements GoogleApiCl
             return;
         }
         try {
-            new SendMailTask(this).execute("salvavidapp.mail", "qweqweqwe", Arrays.asList(destination), "Salvavidapp Message", message);
+            new SendMailTask(this).execute("salvavidapp.mail", "", Arrays.asList(destination), "Salvavidapp Message", message);
             Toast.makeText(getApplicationContext(), "Email sent.", Toast.LENGTH_LONG).show();
         }catch(Exception e){
             Toast.makeText(getApplicationContext(), "Email not sent.", Toast.LENGTH_LONG).show();
