@@ -1,8 +1,26 @@
 # salvavidapp
 
-Android app to send your GPS location via SMS or email (instantly)
+Android app to send your GPS location via SMS and/or email to whoever you want, repeating the process every a specified number of minutes.
 
-**DEPRECATED!** In 2017 it worked 100 % of the times and with all the mobile and Android versions tested, but in 2019 it fails with most of them. DB and widget do not work correctly and gmail account probably got deleted
+It allows to create one widget with one of the alarms created, to start or stop the process.
+
+
+**DEPRECATED** In 2017 it worked 100 %, now widget and DB are not working properly
+
+
+You can set:
+
+- Alarm name
+
+- Message to send before your GPS location
+
+- Phone Contact or Phone number
+
+- Email
+
+- Number of minutes between sending them
+
+
 
 ## Screenshots
 
@@ -17,6 +35,8 @@ Testing it:
 *(Now you now where i live... or maybe not. Tested in the streets of my beautiful neighbor in Madrid :D)*
 
 
+------------------------------------
+
 ## Widget functionality
 
 Adding a widget:
@@ -26,3 +46,18 @@ Adding a widget:
 It gets created:
 
 ![Screenshot](github-images/4.png)
+
+
+------------------------------------
+
+TODOS:
+
+- Fix DB
+
+- Fix "stop" function (or become rich, i can not send infinite SMS messages)
+
+- Allow to create more than one widget
+
+- Encryption would be welcomed :D (*ewqewqewqewqewq*)
+
+- Modularize the code, after 2 years it is like chinese even for me
